@@ -52,13 +52,16 @@ filtered_payloads = [payload for payload in filtered_payloads if any(s in payloa
 # Prompt the user to specify how many payloads to display
 num_payloads = int(input("How many payloads do you want to see? "))
 
-if num_payloads > len(filtered_payloads):
-    print(f"Sorry, there are only {len(filtered_payloads)} payloads available after filtering.")
-    num_payloads = len(filtered_payloads)
+if num_payloads <= 0:
+    print("Error: Please provide a positive number greater than 0.")
+else:
+    if num_payloads > len(filtered_payloads):
+        print(f"Sorry, there are only {len(filtered_payloads)} payloads available after filtering.")
+        num_payloads = len(filtered_payloads)
 
-# Choose the specified number of payloads at random
-chosen_payloads = random.sample(filtered_payloads, num_payloads)
+    # Choose the specified number of payloads at random
+    chosen_payloads = random.sample(filtered_payloads, num_payloads)
 
-# Display the chosen payloads
-for payload in chosen_payloads:
-    print(payload)
+    # Display the chosen payloads
+    for payload in chosen_payloads:
+        print(payload)
