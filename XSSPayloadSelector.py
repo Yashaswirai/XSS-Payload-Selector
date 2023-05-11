@@ -1,7 +1,11 @@
 import random
 
+#filename = input("Enter the filename containing payloads (default: payloads.txt): ")
+#if filename == "":
+filename = "payloads.txt"
+
 # Open a text file containing payloads for reading
-with open("payloads.txt", "r") as f:
+with open(filename, "r") as f:
     # Read the payloads into a list
     payloads = f.read().splitlines()
 
@@ -44,24 +48,25 @@ if keep == "y":
             keep_strings.append(keep_string)
 
 # Filter out payloads that contain any of the specified strings to filter out
-filtered_payloads = [payload for payload in payloads if not any(s in payload for s in filter_strings)]
+if filter_strings:
+    filtered_payloads = [payload for payload in payloads if not any(s in payload for s in filter_strings)]
+else:
+    filtered_payloads = payloads
 
 # Keep only payloads that contain any of the specified strings to keep
-filtered_payloads = [payload for payload in filtered_payloads if any(s in payload for s in keep_strings)]
+if keep_strings:
+    filtered_payloads = [payload for payload in filtered_payloads if any(s in payload for s in keep_strings)]
 
 # Prompt the user to specify how many payloads to display
 num_payloads = int(input("How many payloads do you want to see? "))
 
-if num_payloads <= 0:
-    print("Error: Please provide a positive number greater than 0.")
-else:
-    if num_payloads > len(filtered_payloads):
-        print(f"Sorry, there are only {len(filtered_payloads)} payloads available after filtering.")
-        num_payloads = len(filtered_payloads)
+if num_payloads > len(filtered_payloads):
+    print(f"Sorry, there are only {len(filtered_payloads)} payloads available after filtering.")
+    num_payloads = len(filtered_payloads)
 
-    # Choose the specified number of payloads at random
-    chosen_payloads = random.sample(filtered_payloads, num_payloads)
+# Choose the specified number of payloads at random
+chosen_payloads = random.sample(filtered_payloads, num_payloads)
 
-    # Display the chosen payloads
-    for payload in chosen_payloads:
-        print(payload)
+# Display the chosen payloads
+for payload in chosen_payloads:
+    print(payload)
