@@ -1,8 +1,15 @@
 import random
+import os
+filename = input("Enter the filename containing payloads (default: payloads.txt): ")
 
-#filename = input("Enter the filename containing payloads (default: payloads.txt): ")
-#if filename == "":
-filename = "payloads.txt"
+# Use default filename if no input is given
+if filename == "":
+    filename = "payloads.txt"
+
+# Check if the file exists
+if not os.path.exists(filename):
+    print(f"Error: File {filename} not found.")
+    exit()
 
 # Open a text file containing payloads for reading
 with open(filename, "r") as f:
@@ -14,7 +21,12 @@ filter_strings = []
 keep_strings = []
 
 # Prompt the user to specify whether or not to filter out payloads
-filter_out = input("Filter out payloads? (y/n) ")
+while True:
+    filter_out = input("Filter out payloads? (y/n) ").lower()
+    if filter_out in ["y", "n"]:
+        break
+    else:
+        print("Invalid input. Please enter 'y' or 'n'.")
 
 if filter_out == "y":
     # Loop until the user is done specifying strings to filter out
@@ -31,7 +43,12 @@ if filter_out == "y":
             filter_strings.append(filter_string)
 
 # Prompt the user to specify whether or not to specify strings that should be present in the payloads
-keep = input("Specify strings that should be present in the payloads? (y/n) ")
+while True:
+    keep = input("Specify strings that should be present in the payloads? (y/n) ").lower()
+    if keep in ["y", "n"]:
+        break
+    else:
+        print("Invalid input. Please enter 'y' or 'n'.")
 
 if keep == "y":
     # Loop until the user is done specifying strings to keep
@@ -58,11 +75,17 @@ if keep_strings:
     filtered_payloads = [payload for payload in filtered_payloads if any(s in payload for s in keep_strings)]
 
 # Prompt the user to specify how many payloads to display
-num_payloads = int(input("How many payloads do you want to see? "))
-
-if num_payloads > len(filtered_payloads):
-    print(f"Sorry, there are only {len(filtered_payloads)} payloads available after filtering.")
-    num_payloads = len(filtered_payloads)
+while True:
+    try:
+        num_payloads = int(input("How many payloads do you want to see? "))
+        if num_payloads <= 0:
+            print("Invalid input. Please enter a positive integer.")
+        elif num_payloads > len(filtered_payloads):
+            print(f"Sorry, there are only {len(filtered_payloads)} payloads available after filtering.")
+        else:
+            break
+    except ValueError:
+        print("Invalid input. Please enter a positive integer.")
 
 # Choose the specified number of payloads at random
 chosen_payloads = random.sample(filtered_payloads, num_payloads)
